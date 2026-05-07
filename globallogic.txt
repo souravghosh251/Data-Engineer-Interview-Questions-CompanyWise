@@ -1,0 +1,114 @@
+
+Q1. What is Medallion Architecture?
+Medallion Architecture is a data design pattern used in lakehouses (e.g., Databricks) that organizes data into three layers of increasing quality:
+Layer	Also Called	Purpose
+Bronze	Raw / Landing	Ingests raw data as-is from sources (JSON, CSV, API). No transformations. Acts as a single source of truth.
+Silver	Cleansed / Curated	Data is cleaned, deduplicated, schema-enforced, and joined. Business logic starts here.
+Gold	Aggregated / Business	Highly curated, aggregated, business-ready data for dashboards, ML models, and reporting.
+Key benefit: Each layer incrementally improves data quality, making debugging easier and enabling reprocessing from any layer.
+
+Q2. What happens if you remove the Bronze layer?
+Removing Bronze causes several problems:
+1. Loss of raw data lineage — You can't trace back to the original source data.
+2. No reprocessing capability — If transformation logic changes, you can't reprocess from raw; you'd need to re-ingest from the source system.
+3. Debugging becomes harder — No baseline to compare cleansed data against.
+4. Data loss risk — If Silver transformations have bugs, the original data is gone.
+5. Source system dependency — You're forced to go back to source systems for re-extraction, which may have retention limits or API rate limits.
+Interview Tip: Say: "In my project, we kept the Bronze layer in ADLS Gen2 as Parquet/Delta files. It acted as our insurance policy. When business logic changed, we replayed from Bronze instead of re-extracting from source."
+
+Q3. Slowly Changing Dimensions (SCD)
+SCDs handle how historical changes in dimension data are tracked over time.
+Type	Strategy	Example
+SCD Type 0	No changes allowed	Static reference data (e.g., date of birth)
+SCD Type 1	Overwrite old value	Customer address updated — old address is lost
+SCD Type 2	Add new row with versioning	New row with start_date, end_date, is_current flag. Full history preserved
+SCD Type 3	Add new column	current_city and previous_city columns. Limited history (only one prior value)
+SCD Type 4	Separate history table	Current data in one table, history in another
+SCD Type 6	Hybrid (1+2+3)	Combines overwrite + versioning + previous value column
+Project Answer:
+"In my project, I implemented SCD Type 2 for the Customer dimension table using Delta Lake's MERGE operation in Databricks. Each record had effective_start_date, effective_end_date, and is_active flag. When a customer's address changed, the old row was closed (end-dated) and a new row was inserted."
+
+Q4. Data Skewness
+Data Skewness occurs when data is unevenly distributed across partitions in a distributed system (like Spark). One partition may have millions of rows while others have thousands, causing:
+* Straggler tasks (one task takes 10x longer)
+* OOM errors on the heavy partition
+* Overall job slowdown
+Optimization Techniques:
+Technique	How it helps
+Salting	Add a random prefix/suffix to the skewed key, distribute data, then aggregate back.
+broadcast() join	If one table is small, broadcast it to all nodes to avoid shuffle entirely.
+Adaptive Query Execution (AQE)	Spark 3.x feature — automatically coalesces/splits skewed partitions at runtime. Enable with spark.sql.adaptive.enabled = true
+Repartition	df.repartition(n, "column") to redistribute data more evenly.
+Custom partitioning	Partition by a more evenly-distributed column.
+Isolate skewed keys	Process the skewed key separately and UNION back.
+Q5. Data Shuffling
+Data Shuffling is the redistribution of data across partitions during operations like join, groupBy, distinct, or repartition. Data moves across the network between executors.
+Why it's bad: It's the most expensive operation in Spark — involves disk I/O, serialization, and network transfer.
+Techniques to reduce shuffling:
+Technique	Description
+Broadcast Join	broadcast(small_df) — avoids shuffle entirely for small tables (<10MB default).
+Pre-partitioning	Partition data by join key using repartition() or partitionBy() during write.
+Bucketing	df.write.bucketBy(n, "key") — pre-sorts and partitions data on disk, so joins on that key skip shuffle.
+Coalesce instead of Repartition	coalesce(n) reduces partitions without a full shuffle.
+Reduce operations that trigger shuffle	Minimize use of groupBy, distinct, orderBy where possible. Use reduceByKey over groupByKey.
+Enable AQE	Spark 3.x can optimize shuffle partitions automatically.
+Q6. Adding a 4th layer just for removing NA/NULL — Good approach?
+Short answer: No, it's generally a bad approach.
+Why:
+* Removing NULLs/NAs is a basic cleansing operation that belongs in the Silver layer.
+* Adding a dedicated layer increases pipeline complexity (more jobs, more storage, more monitoring).
+* It adds latency — data must pass through an extra layer before reaching Gold.
+* It creates maintenance overhead with no meaningful value-add.
+When a 4th layer could make sense:
+* If you have a Platinum/Diamond layer for ML feature stores or real-time serving.
+* If you have a Sandbox/Exploration layer for data scientists.
+* But never just for NULL removal — that's too trivial for its own layer.
+"In an interview, say: Null handling should be part of the Silver layer's data quality checks. Creating a separate layer for it violates the DRY principle and increases operational cost without adding business value."
+
+Q7. Fact vs Dimension Table
+Aspect	Fact Table	Dimension Table
+Contains	Measurable, quantitative data (metrics)	Descriptive, contextual attributes
+Examples	Sales amount, quantity, revenue, clicks	Customer name, product category, date, region
+Size	Very large (millions/billions of rows)	Relatively small
+Keys	Foreign keys to dimension tables	Primary/surrogate keys
+Changes	Appended (immutable events)	Updated over time (SCD)
+Grain	One row per business event/transaction	One row per entity
+Project Answer:
+"In my project:
+* Fact Table: fact_sales_transactions — contained order_id, product_id, customer_id, quantity, amount, order_date.
+* Dimension Tables: dim_customer (name, address, segment), dim_product (name, category, brand), dim_date (day, month, quarter, year), dim_store (location, region).
+* We used a Star Schema design in the Gold layer of our medallion architecture."
+
+SQL — Q1: Remove duplicate transactions, keep latest
+sql
+-- Method 1: Using ROW_NUMBER() (Most common interview answer)
+WITH rankedAS (
+SELECT*,
+ROW_NUMBER()OVER (
+PARTITIONBY transaction_id
+ORDER BY transaction_dateDESC
+           )AS rn
+FROM transactions
+)
+SELECT*
+FROM ranked
+WHERE rn=1;
+sql
+-- Method 2: DELETE duplicates (if modifying the table in-place)
+WITH rankedAS (
+SELECT*,
+ROW_NUMBER()OVER (
+PARTITIONBY transaction_id
+ORDER BY transaction_dateDESC
+           )AS rn
+FROM transactions
+)
+DELETEFROM rankedWHERE rn>1;
+sql
+-- Method 3: Using QUALIFY (Databricks / Snowflake)
+SELECT*
+FROM transactions
+QUALIFYROW_NUMBER()OVER (
+PARTITIONBY transaction_id
+ORDER BY transaction_dateDESC
+)=1;
