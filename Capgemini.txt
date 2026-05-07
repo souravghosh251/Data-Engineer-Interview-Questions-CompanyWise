@@ -1,0 +1,42 @@
+### Capgemini Data Engineer Interview Questions
+
+## L1 Round
+
+* What is Autoloader in Databricks?
+* What is Medallion Architecture?
+* If you have a dataset of 10 million records, where 2 million are duplicates, what approach would you take to identify and remove duplicates efficiently?
+* What are window functions in SQL?
+* What is Unity Catalog in Databricks?
+* How have you used Azure Data Factory in your project to orchestrate the pipelines?
+* What is the difference between Primary Key and Unique key in SQL?
+* What is incremental load in Databricks?
+
+### ADF / Azure Questions
+
+1️⃣ How does parameterization work in Azure Data Factory (datasets, pipelines, linked services)?
+
+2️⃣ What are the key differences between Mapping Data Flows vs Data Flow Activities in ADF?
+
+3️⃣ How do you debug failures in ADF — what steps do you take to isolate the issue?
+
+4️⃣ What’s the difference between Azure Blob Storage and ADLS Gen2 in terms of performance and security?
+
+5️⃣ How do you handle incremental loads in ADF using a watermark or timestamp column?
+
+6️⃣ What are Mount Points in Azure Databricks, and how do you use them with ADLS?
+
+7️⃣ Write a SQL query to find second highest salary from an employee table.
+
+8️⃣ What are the different Integration Runtime types in ADF and their use cases?
+
+9️⃣ How do you trigger a Databricks notebook from ADF and pass values into it?
+
+🔟 What is the use of activity dependency conditions (e.g., success, failure, completion) in pipeline flows?
+
+---
+
+## L2 Round
+
+### Project Experience
+
+* Cross questions on project experience.
