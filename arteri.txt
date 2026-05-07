@@ -1,0 +1,197 @@
+**1. A REST API returns the following JSON response when you call GET /readings**
+
+{
+
+"assets": [
+
+{
+
+"id": "asset-1",
+
+"sensors": [
+
+{
+
+"id": "temp-1",
+
+"readings": [
+
+{"ts": "2025-01-01T10:00:00", "v": 21.5},
+
+{"ts": "2025-01-01T10:05:00", "v": 22.0}
+
+]
+
+},
+
+{
+
+"id": "humid-1",
+
+"readings": [
+
+{"ts": "2025-01-01T10:00:00", "v": 40.2}
+
+]
+
+}
+
+]
+
+},
+
+{
+
+"id": "asset-2",
+
+"sensors": [
+
+{
+
+"id": "temp-2",
+
+"readings": [
+
+{"ts": "2025-01-01T10:00:00", "v": 19.0}
+
+]
+
+}
+
+]
+
+}
+
+]
+
+}
+
+**Your Task**
+
+Write a Python function that:
+
+1. Calls the REST API
+2. Parses the nested JSON
+3. Returns a **flat list of dictionaries** in the format
+
+[
+
+{"asset_id": "asset-1", "sensor_id": "temp-1", "timestamp": "2025-01-01T10:00:00", "value": 21.5},
+
+{"asset_id": "asset-1", "sensor_id": "temp-1", "timestamp": "2025-01-01T10:05:00", "value": 22.0},
+
+{"asset_id": "asset-1", "sensor_id": "humid-1", "timestamp": "2025-01-01T10:00:00", "value": 40.2},
+
+{"asset_id": "asset-2", "sensor_id": "temp-2", "timestamp": "2025-01-01T10:00:00", "value": 19.0}
+
+]
+
+***Starter Code:***
+
+import requests
+
+def fetch_and_flatten_readings(url: str):
+
+resp = requests.get(url)
+
+resp.raise_for_status()
+
+data = resp.json()
+
+result = []
+
+# TODO: flatten into result
+
+result = result.map()
+
+return result
+
+**2. Detect Gaps in Time Series**
+
+***Problem:***
+
+You are working with **time-series sensor data**.
+
+Each sensor emits readings at a **fixed expected interval** (for example, every 5 seconds or every 1 minute).
+
+Sometimes, due to network issues or device failures, some readings are missing.
+
+Your job is to detect these **gaps**.
+
+***You are given:***
+
+1. A **sorted list of timestamps** (strings in ISO format) Example:
+
+timestamps = [
+
+"2025-01-01T10:00:00",
+
+"2025-01-01T10:00:05",
+
+"2025-01-01T10:00:10",
+
+"2025-01-01T10:00:25"
+
+]
+
+An **expected interval** in seconds — e.g., 5
+
+***Your task:***
+
+✔ Identify all gaps where the difference between consecutive timestamps is greater than the expected interval.
+
+✔ Return a list of tuples in the format:
+
+(previous_timestamp, next_timestamp, gap_in_seconds)
+
+***Given:***
+
+timestamps = [
+
+"2025-01-01T10:00:00",
+
+"2025-01-01T10:00:05",
+
+"2025-01-01T10:00:10",
+
+"2025-01-01T10:00:25"
+
+]
+
+expected_interval_sec = 5
+
+***The gap is between:***
+
+10:00:10 --> 10:00:25   (gap = 15 seconds)
+
+***So the output should be:***
+
+[
+
+("2025-01-01T10:00:10", "2025-01-01T10:00:25", 15)
+
+]
+
+***Starter Code:***
+
+from datetime import datetime
+
+def find_gaps(timestamps, expected_interval_sec):
+
+"""
+
+timestamps: list of ISO timestamp strings, sorted ascending.
+
+Return: list of (prev_ts, next_ts, diff_sec)
+
+where diff_sec > expected_interval_sec.
+
+"""
+
+fmt = "%Y-%m-%dT%H:%M:%S"
+
+gaps = []
+
+# TODO: implement the logic
+
+return gaps

@@ -1,0 +1,10 @@
+TCS interviews
+
+1. Where the data is stored in spark when we run the job
+2. how can we import and convert the data from  this into3 columns in  data a , 1 , asdda , addsa
+3. cache() vs persist()
+4. In memory storage
+5. What is a cron job
+6. How do you schedule the jobs in databricks
+7. Remove duplicates
+8. optimise spark jobs
