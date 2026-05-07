@@ -1,0 +1,6 @@
+# Wissen Technology
+
+1. Union VS Union All SQL
+2. Print 6 digit Palindrome No
+3. Count unique no of digits
+4. String is Anagram String or Not
