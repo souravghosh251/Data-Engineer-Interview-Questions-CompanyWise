@@ -1,0 +1,23 @@
+1. List VS tuple
+2. what are decorator functions in python
+3. What are generators in python
+4. Deep Copy VS Shalow copy in python
+5. SQL queries 
+    
+    i)
+    
+    **Q1: Find users who purchased the same product in different months**
+    
+    **Table:** `transactions`
+    
+    **Columns:** `user_id, product_id, transaction_date`
+    
+    Here are **clean, interview-ready SQL solutions** (pick based on DB).
+    
+    ii)
+    
+    **Find top 3 products by revenue per category**
+    
+    **Table:** `products`
+    
+    **Columns:** `category, product_id, revenue`
