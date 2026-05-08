@@ -1,0 +1,160 @@
+1. Find Second Highest Salary
+2. What is. a Stored Procedure. Difference between Stored Procedure and Functions
+3. Difference between Copy Activity and Data flow
+4. What is ADF?
+5. What is Databricks
+6. Difference between Databricks and ADF
+7. Incremental Load vs Full Load
+8. Fact Vs Dimmension Table
+
+# 1) Top 3 salaries
+
+**a) Top 3 salaries overall (SQL Server / T-SQL):**
+
+```sql
+SELECT TOP (3) Salary
+FROM Employee
+ORDER BY Salary DESC;
+
+```
+
+**b) Top 3 salaries *per department*** (ANSI SQL / works in SQL Server, PostgreSQL, MySQL 8+ with slight syntax changes):
+
+```sql
+-- SQL Server / PostgreSQL / MySQL 8+
+SELECT Department, Salary
+FROM (
+  SELECT Department, Salary,
+         ROW_NUMBER() OVER (PARTITION BY Department ORDER BY Salary DESC) AS rn
+  FROM Employee
+) t
+WHERE rn <= 3
+ORDER BY Department, Salary DESC;
+
+```
+
+# 2) Customers whose total order amount > 100,000
+
+Correct pattern uses `GROUP BY` + `HAVING`. Also show date filter for January 2024.
+
+**Generic SQL (works in most engines):**
+
+```sql
+SELECT customer_id, customer_name, SUM(order_amount) AS total_amount
+FROM ZomatoOrders    -- use actual table name with order rows
+WHERE order_date >= '2024-01-01' AND order_date < '2024-02-01'
+GROUP BY customer_id, customer_name
+HAVING SUM(order_amount) > 100000;
+
+```
+
+Notes:
+
+- Replace `order_date` with your timestamp/date column.
+- Use `customer_id` in GROUP BY to avoid duplicate names mis-aggregation.
+
+# 3) Fixing `SELECT customer_name, FROM Zomato WHERE SUM(ORDER_AMOUNT) > 100000 AND DATETIME('2024-01')`
+
+Problems:
+
+- `SUM()` cannot be used in WHERE (use HAVING).
+- stray comma after `customer_name`.
+- `DATETIME('2024-01')` isn’t a valid filter — use date ranges or date functions.
+
+See the corrected example above.
+
+# 4) COUNT duplicate emails which appear more than once
+
+**A — List duplicate emails and their counts:**
+
+```sql
+SELECT email, COUNT(*) AS occurrences
+FROM users
+GROUP BY email
+HAVING COUNT(*) > 1;
+
+```
+
+**B — Count how many distinct emails are duplicated (i.e., number of emails that appear >1):**
+
+```sql
+SELECT COUNT(*) AS num_duplicated_emails
+FROM (
+  SELECT email
+  FROM users
+  GROUP BY email
+  HAVING COUNT(*) > 1
+) t;
+
+```
+
+**C — Get all rows (full records) for duplicate emails:**
+
+```sql
+SELECT u.*
+FROM users u
+JOIN (
+  SELECT email
+  FROM users
+  GROUP BY email
+  HAVING COUNT(*) > 1
+) d ON u.email = d.email;
+
+```
+
+# 5) `SELECT COUNT()` — quick note
+
+- `COUNT(*)` counts rows.
+- `COUNT(column)` counts non-NULL values in that column.
+- `COUNT(DISTINCT column)` counts distinct non-NULL values.
+
+# 6) Medallion architecture (short)
+
+- **Bronze** — raw ingestion layer (landing zone). Store raw events/files as-is. Minimal transforms.
+- **Silver** — cleaned & conformed / transformed layer. Deduplicated, typed, normalized for analysis.
+- **Gold** — business-ready aggregates, curated datasets & materialized tables used by BI/ML/production.
+
+# 7) File types we can store / load into BigQuery
+
+Common formats BigQuery supports:
+
+- CSV / text (comma-separated)
+- Newline-delimited JSON (NDJSON)
+- Avro
+- Parquet
+- ORC
+- Google Sheets (via connector)
+- Parquet/Avro/ORC are preferred for columnar, schema-preserving loads.
+    
+    You can also load gzipped versions of many of these.
+    
+
+# 8) Difference between CSV and Parquet (concise)
+
+- **Storage layout:** CSV = row-oriented plain text. Parquet = columnar binary format.
+- **Schema & typing:** CSV has no enforced schema (everything text), Parquet stores schema and data types.
+- **Compression & size:** Parquet is highly compressed and much smaller than CSV for large data.
+- **Read performance:** Parquet reads only needed columns (faster for analytics); CSV requires scanning whole rows.
+- **Use cases:** CSV: simple interchange, small files, human-readable. Parquet: big data analytics, data lakes, efficient storage and queries.
+
+# 9) Ten common activities in Azure (data-engineer focused)
+
+1. **Create Resource Group** — logical grouping for related resources.
+2. **Provision Storage** — create Blob Storage / ADLS Gen2 for raw/processed data.
+3. **Set up Azure SQL / Synapse / Cosmos DB** — provision databases/warehouses for serving data.
+4. **Build Azure Data Factory (ADF) pipelines** — ETL/ELT orchestration and data movement.
+5. **Create Azure Databricks workspaces & jobs** — transformations, streaming, ML notebooks.
+6. **Ingest streaming data** — Event Hubs or IoT Hub for real-time ingestion.
+7. **Implement Data Lake structure** — bronze/silver/gold zones in ADLS Gen2.
+8. **Configure monitoring & alerting** — Azure Monitor, Log Analytics, alerts for pipelines and resources.
+9. **Manage security / IAM** — RBAC, managed identities, keys, and secrets (Key Vault).
+10. **Automate deployment** — ARM/Bicep templates or Terraform + CI/CD pipelines (Azure DevOps / GitHub Actions).
+
+---
+
+If you want, I can:
+
+- Turn any of these corrected SQL snippets into the exact dialect you’ll use (SQL Server / MySQL / BigQuery / Snowflake).
+- Generate sample dataset + runnable SQL and show the results (I can produce sample rows).
+
+Which one should I expand into an example next?

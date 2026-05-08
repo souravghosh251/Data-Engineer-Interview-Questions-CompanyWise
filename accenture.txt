@@ -1,0 +1,65 @@
+Background: 2.5 YOE as data engineer
+
+My Tech stack:  AWS, snowflake, python, sql
+
+Cleared OA few weeks before on mettl platform all MCQ questions ( total 40 questions).
+
+First round of technical interview
+
+Questions asked:
+
+Can you briefly introduce yourself and your work experience with Snowflake and other tools?
+
+What percentage of your work involves Snowflake?
+
+Can you explain your project architecture / overall architecture?
+
+What are the source systems/tools from where you pull data?
+
+What is the difference between SCD Type 1 and Type 2?
+
+What is Snowflake architecture?
+
+How does Snowflake store data in the storage layer?
+
+Can you elaborate how the storage layer holds data?
+
+What are micro-partitions?
+
+What is the size of a micro-partition?
+
+What is the role of a virtual warehouse?
+
+How does Snowflake handle concurrency (multiple queries)?
+
+What is a multi-cluster warehouse?
+
+What are the different table types in Snowflake?
+
+What table types have you used in your project (real-time use case)?
+
+Does transient table support time travel?
+
+What is time travel in Snowflake?
+
+What happens internally when you run a query in Snowflake?
+
+How to remove duplicate rows while keeping one record?
+
+Write the query for removing duplicates.
+
+Write a query to find the second highest salary.
+
+Do you know about Snowpipe?
+
+What are streams in Snowflake?
+
+What are tasks in Snowflake? Have you implemented them?
+
+Write a query to create and schedule a Snowflake task for calling a SP every hour.
+
+What is the difference between CTE and subquery?
+
+What is the difference between ROW_NUMBER, RANK, and DENSE_RANK?
+
+I hope this helps someone.

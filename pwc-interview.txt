@@ -1,0 +1,47 @@
+𝗥𝗢𝗨𝗡𝗗 𝟭 – 𝗧𝗘𝗖𝗛𝗡𝗜𝗖𝗔𝗟
+
+1️⃣ Write a SQL query to fetch the third highest salary from a table.
+
+2️⃣ Difference between RANK(), DENSE_RANK() and ROW_NUMBER() in SQL.
+
+3️⃣ How would you handle Slowly Changing Dimensions (SCD Type II) in an ETL pipeline?
+
+4️⃣ How would you detect & handle duplicates while ingesting streaming data using PySpark or Kafka?
+
+5️⃣ Difference between coalesce() and repartition() in Spark — when would you use which?
+
+6️⃣ Write a PySpark code snippet to join two large DataFrames efficiently.
+
+7️⃣ Explain how partitioning works in Hive/Spark and how it improves performance.
+
+8️⃣ How would you handle skewed data during a join in Spark?
+
+9️⃣ What are broadcast joins in Spark, and when would you use them?
+
+𝗥𝗢𝗨𝗡𝗗 𝟮 – 𝗧𝗘𝗖𝗛𝗡𝗜𝗖𝗔𝗟
+
+1️⃣ Design a data pipeline to process daily sales data from multiple sources (CSV, API, DB) into a data warehouse.
+
+2️⃣ Describe the architecture of a real-time processing system you’ve worked on.
+
+3️⃣ You need to migrate 10TB data from on-prem to Azure Synapse — how would you ensure consistency & minimal downtime?
+
+4️⃣ Multiple JSONs with inconsistent schemas — how would you ingest & unify them using PySpark?
+
+5️⃣ How would you monitor and maintain data quality across a large-scale pipeline?
+
+6️⃣ Build a system to track user behavior in real time — which tools would you use & how would you design it?
+
+𝗥𝗢𝗨𝗡𝗗 𝟯 – 𝗠𝗔𝗡𝗔𝗚𝗘𝗥𝗜𝗔𝗟 / 𝗕𝗘𝗛𝗔𝗩𝗜𝗢𝗥𝗔𝗟
+
+1️⃣ Tell me about a time you handled a production issue under pressure.
+
+2️⃣ How do you explain technical concepts to non-technical stakeholders?
+
+3️⃣ How do you manage delivery when client expectations are unrealistic?
+
+4️⃣ Share a time you coordinated with multiple teams having conflicting priorities.
+
+5️⃣ How do you ensure continuous learning and growth in your technical journey?
+
+6️⃣ How do you prioritize tasks when working under tight deadlines?

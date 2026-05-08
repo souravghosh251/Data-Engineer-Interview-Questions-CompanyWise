@@ -1,0 +1,41 @@
+Today Data engineer interview Questions.
+
+1. Introduction
+
+2. what format of files did you use as part of your projects.
+
+3. How did you flatten and load the json file in tables.
+
+4. what is Schema Drift in ADF.
+
+5. Have you faced schema changes in your projects.
+
+6. what approach did you follow for Delta Incremental Loads.
+
+7. Yesterday`s data got corrupted - how would you reload it.
+
+8. How do you handle dynamic connections in a pipeline from multiple sources.
+
+9. A Pipeline is failing frequently - how would you fix and stabilize it.
+
+10. Have you used retry policies in you projects and explian.
+
+11. How to design the depending pipelines what is the approch.
+
+12. Have you worked on Azure Databricks and pyspark? what is the data plane?
+
+13. what is executor memory in data bricks?
+
+14. how to remove duplicates from data frame.
+
+15. what is database secret & explain.
+
+16. Join tow data frames and get department wise employe count and total salary.
+
+17. Rank employee based on salary from data frame
+
+18. filter where country is India and state is Telangana.
+
+19. write SQL query for joining employee and departments tables.
+
+20. How to find number if partitions in data frames.
